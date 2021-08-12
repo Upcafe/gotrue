@@ -1,0 +1,28 @@
+version: '1'
+
+services:
+
+  db:
+    image: mysql:8.0.17
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: gotrue_development
+    ports:
+      - "3306:3306"
+      
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    links:
+      - db
+    volumes:
+      - my-datavolume:/var/lib/mysql
+
+volumes:
+  my-datavolume:

@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"time"
+	"fmt"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/netlify/gotrue/conf"
@@ -35,6 +36,9 @@ const useSessionCookie = "session"
 func (a *API) Token(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()
 	grantType := r.FormValue("grant_type")
+
+	fmt.Println("grantTypegrantTypegrantType")
+	fmt.Println(r)
 
 	switch grantType {
 	case "password":
@@ -98,6 +102,10 @@ func (a *API) ResourceOwnerPasswordGrant(ctx context.Context, w http.ResponseWri
 		return err
 	}
 	metering.RecordLogin("password", user.ID, instanceID)
+
+
+	fmt.Println("tokentokentoken")
+	fmt.Println(token)
 	return sendJSON(w, http.StatusOK, token)
 }
 
@@ -173,7 +181,16 @@ func generateAccessToken(user *models.User, expiresIn time.Duration, secret stri
 		Email:        user.Email,
 		AppMetaData:  user.AppMetaData,
 		UserMetaData: user.UserMetaData,
+
 	}
+	fmt.Println("");
+	fmt.Println("");
+	fmt.Println("");
+	fmt.Println("generated new token: ", claims)
+	fmt.Println("user.id: ", user.ID.String())
+	fmt.Println("");
+	fmt.Println("");
+	fmt.Println("");
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(secret))

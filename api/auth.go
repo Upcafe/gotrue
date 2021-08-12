@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -27,6 +28,7 @@ func (a *API) requireAdmin(ctx context.Context, w http.ResponseWriter, r *http.R
 	// Find the administrative user
 	adminUser, err := getUserFromClaims(ctx, a.db)
 	if err != nil {
+		fmt.Println("adminUser")
 		return nil, unauthorizedError("Invalid admin user").WithInternalError(err)
 	}
 
@@ -78,11 +80,30 @@ func (a *API) parseJWTClaims(bearer string, r *http.Request, w http.ResponseWrit
 	config := a.getConfig(ctx)
 
 	p := jwt.Parser{ValidMethods: []string{jwt.SigningMethodHS256.Name}}
+
+	fmt.Println("")
+	fmt.Println("try parsing claims....")
+	fmt.Println("")
+
 	token, err := p.ParseWithClaims(bearer, &GoTrueClaims{}, func(token *jwt.Token) (interface{}, error) {
+
 		return []byte(config.JWT.Secret), nil
 	})
+
+	fmt.Println("")
+	fmt.Println("tokenraw", token.Raw)
+	fmt.Println("token claims: ", token.Claims)
+	fmt.Println("token header: ", token.Header)
+	fmt.Println("token valid: ", token.Valid)
+	fmt.Println("token signedstring: ", token.SignedString)
+	fmt.Println("token signingstring: ", token.SigningString)
+	fmt.Println("token signature", token.Signature)
+	fmt.Println("jwtsecret", config.JWT.Secret)
+	fmt.Println("")
+
 	if err != nil {
-		a.clearCookieToken(ctx, w)
+		fmt.Println(err)
+		//a.clearCookieToken(ctx, w)
 		return nil, unauthorizedError("Invalid token: %v", err)
 	}
 

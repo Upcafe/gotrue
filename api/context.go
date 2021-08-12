@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gobuffalo/uuid"
@@ -132,6 +133,13 @@ func withSignature(ctx context.Context, id string) context.Context {
 // getSignature reads the request ID from the context.
 func getSignature(ctx context.Context) string {
 	obj := ctx.Value(signatureKey)
+	fmt.Println("")
+	fmt.Println("")
+	fmt.Println("")
+	fmt.Println("signature from context: ", obj )
+	fmt.Println("")
+	fmt.Println("")
+	fmt.Println("")
 	if obj == nil {
 		return ""
 	}

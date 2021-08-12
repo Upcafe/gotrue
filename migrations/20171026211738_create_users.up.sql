@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `{{ index .Options "Namespace" }}users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `instance_id` varchar(255) DEFAULT NULL,
   `id` varchar(255) NOT NULL,
   `aud` varchar(255) DEFAULT NULL,

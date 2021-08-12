@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/netlify/gotrue/models"
@@ -43,6 +44,16 @@ func (a *API) Signup(w http.ResponseWriter, r *http.Request) error {
 
 	instanceID := getInstanceID(ctx)
 	params.Aud = a.requestAud(ctx, r)
+
+	fmt.Println("a.db")
+	fmt.Println(a.db)
+	fmt.Println("instanceID")
+	fmt.Println(instanceID)
+	fmt.Println("params.Email")
+	fmt.Println(params.Email)
+	fmt.Println("params.Aud")
+	fmt.Println(params.Aud)
+
 	user, err := models.FindUserByEmailAndAudience(a.db, instanceID, params.Email, params.Aud)
 	if err != nil && !models.IsNotFoundError(err) {
 		return internalServerError("Database error finding user").WithInternalError(err)
@@ -101,6 +112,7 @@ func (a *API) signupNewUser(ctx context.Context, conn *storage.Connection, param
 	if err != nil {
 		return nil, internalServerError("Database error creating user").WithInternalError(err)
 	}
+
 	if user.AppMetaData == nil {
 		user.AppMetaData = make(map[string]interface{})
 	}

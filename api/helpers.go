@@ -50,6 +50,9 @@ func sendJSON(w http.ResponseWriter, status int, obj interface{}) error {
 
 func getUserFromClaims(ctx context.Context, conn *storage.Connection) (*models.User, error) {
 	claims := getClaims(ctx)
+	fmt.Println("claims", claims)
+	fmt.Println("ctx", ctx)
+
 	if claims == nil {
 		return nil, errors.New("Invalid token")
 	}
@@ -73,6 +76,9 @@ func getUserFromClaims(ctx context.Context, conn *storage.Connection) (*models.U
 
 func (a *API) isAdmin(ctx context.Context, u *models.User, aud string) bool {
 	config := a.getConfig(ctx)
+
+	fmt.Println("audience", aud)
+
 	if aud == "" {
 		aud = config.JWT.Aud
 	}
@@ -87,12 +93,15 @@ func (a *API) requestAud(ctx context.Context, r *http.Request) string {
 	}
 
 	// Then check the token
+
+	
 	claims := getClaims(ctx)
 	if claims != nil && claims.Audience != "" {
 		return claims.Audience
 	}
-
+	
 	// Finally, return the default of none of the above methods are successful
+	fmt.Println("none succesfull claisms, return ddefault.")
 	return config.JWT.Aud
 }
 

@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"fmt"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/didip/tollbooth/v5"
@@ -74,6 +75,15 @@ func addGetBody(w http.ResponseWriter, req *http.Request) (context.Context, erro
 func (a *API) loadJWSSignatureHeader(w http.ResponseWriter, r *http.Request) (context.Context, error) {
 	ctx := r.Context()
 	signature := r.Header.Get(jwsSignatureHeaderName)
+
+	fmt.Println("")
+	fmt.Println("")
+	fmt.Println("r.Header.Get(jwsSignatureHeaderName)", jwsSignatureHeaderName);
+	fmt.Println("")
+	fmt.Println("")
+
+
+
 	if signature == "" {
 		return nil, badRequestError("Operator microservice headers missing")
 	}
@@ -87,6 +97,12 @@ func (a *API) loadInstanceConfig(w http.ResponseWriter, r *http.Request) (contex
 	if signature == "" {
 		return nil, badRequestError("Operator signature missing")
 	}
+
+	fmt.Println("")
+	fmt.Println("")
+	fmt.Println("signature: ", signature)
+	fmt.Println("")
+	fmt.Println("")
 
 	claims := NetlifyMicroserviceClaims{}
 	p := jwt.Parser{ValidMethods: []string{jwt.SigningMethodHS256.Name}}
