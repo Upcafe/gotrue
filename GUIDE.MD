@@ -19,3 +19,5 @@ migrate -path ./migrations -database "mysql://root:my-secret-pw@tcp(127.0.0.1:33
 
 # mailer 
 .env GOTRUE_MAILER_AUTOCONFIRM=true
+
+test
